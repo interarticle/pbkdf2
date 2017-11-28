@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",  // For async.
+    "module": "amd",  // See typescript-amd-header.ts.
+    "strict": true,
+    "noImplicitAny": true,
+    "outFile": "../index.js",
+    "strictNullChecks": true
+  },
+  "files": [
+    "typescript-amd-header.ts",
+    "index.ts"
+  ]
+}
