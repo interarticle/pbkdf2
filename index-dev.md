@@ -45,9 +45,9 @@ HMAC-SHA512; ASCII enforced. 100000000 rounds.
     <label>
       Salt:
       <input type="text" class="lower-input-text fixed-width" ow-model="main.salt.siteUser" ow-bind-prop="disabled=mainDisable" />
-      /
+      <span class="fixed-width">/</span>
       <input type="number" class="lower-input-text fixed-width" ow-model="main.salt.year" ow-bind-prop="disabled=mainDisable" style="width: 5em" />
-      /
+      <span class="fixed-width">/</span>
       <input type="number" class="lower-input-text fixed-width" ow-model="main.salt.revision" ow-bind-prop="disabled=mainDisable" min="0" style="width: 2em" />
     </label>
   </div>

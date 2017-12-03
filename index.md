@@ -45,9 +45,9 @@ HMAC-SHA512; ASCII enforced. 100000000 rounds.
     <label>
       Salt:
       <input type="text" class="lower-input-text fixed-width" ow-model="main.salt.siteUser" ow-bind-prop="disabled=mainDisable" />
-      /
+      <span class="fixed-width">/</span>
       <input type="number" class="lower-input-text fixed-width" ow-model="main.salt.year" ow-bind-prop="disabled=mainDisable" style="width: 5em" />
-      /
+      <span class="fixed-width">/</span>
       <input type="number" class="lower-input-text fixed-width" ow-model="main.salt.revision" ow-bind-prop="disabled=mainDisable" min="0" style="width: 2em" />
     </label>
   </div>
@@ -643,9 +643,6 @@ define("crypto/key_setup", ["require", "exports", "indexed_db_object_map", "binu
         static async open(mapName) {
             return new KeySetup(await ObjectMap.open(mapName));
         }
-        get pbkdf2Rounds() {
-            return 100000000;
-        }
         async getStoredKeys() {
             const pbkdfKey = await this.keyStore.get('pbkdf-key');
             const saltKey = await this.keyStore.get('salt-key');
@@ -896,7 +893,6 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
         async onSetSetupKey() {
             if (!this.keySetup)
                 throw new Error('assertion error: this.keySetup not initialized');
-            const stopProgressReport = this.reportProgress(this.keySetup.pbkdf2Rounds, s => this.$scope.setup.progress = s);
             this.$scope.setup.busy = true;
             try {
                 await this.keySetup.setKey(this.$scope.setup.keyHex);
@@ -904,7 +900,6 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
             }
             finally {
                 this.$scope.setup.busy = false;
-                stopProgressReport();
             }
             await this.reloadKeySetup();
         }

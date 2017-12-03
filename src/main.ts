@@ -190,15 +190,12 @@ export class MainController {
 
   private async onSetSetupKey() {
     if (!this.keySetup) throw new Error('assertion error: this.keySetup not initialized');
-    const stopProgressReport = this.reportProgress(
-      this.keySetup.pbkdf2Rounds, s => this.$scope.setup.progress = s);
     this.$scope.setup.busy = true;
     try {
       await this.keySetup.setKey(this.$scope.setup.keyHex);
       this.$scope.setup.keyHex = '';
     } finally {
       this.$scope.setup.busy = false;
-      stopProgressReport();
     }
     await this.reloadKeySetup();
   }

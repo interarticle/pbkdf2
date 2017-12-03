@@ -8,10 +8,6 @@ export class KeySetup {
     return new KeySetup(await ObjectMap.open(mapName));
   }
 
-  get pbkdf2Rounds(): number {
-    return 100000000;
-  }
-
   async getStoredKeys(): Promise<[CryptoKey, CryptoKey] | null> {
     const pbkdfKey = await this.keyStore.get('pbkdf-key');
     const saltKey = await this.keyStore.get('salt-key');
