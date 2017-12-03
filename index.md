@@ -85,7 +85,10 @@ Output:
 <span class="status-text" ow-bind-text="main.busy ? main.progress : ''"></span>
 <span id="output" class="fixed-width" ow-bind-text="main.output"></span>
 <button id="copy-output" ow-bind-prop="disabled=main.output === ''">Copy</button>
-<button id="clear-output" ow-bind-prop="disabled=main.output === ''">Clear</button>
+<button id="clear-output" ow-bind-prop="disabled=main.output === ''">
+  Clear
+  <span ow-bind-text="main.clearMsg"></span>
+</button>
 
 <script>
 "use strict";
@@ -714,6 +717,7 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const KEY_STORE_NAME = 'setup-key-store';
+    const AUTO_CLEAR_DELAY_MILLIS = 60000;
     class DefaultScope {
         constructor() {
             this.main = {
@@ -731,6 +735,7 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
                 progress: '',
                 output: '',
                 passwordStatus: '',
+                clearMsg: '',
             };
             this.testing = {
                 busy: false,
@@ -755,6 +760,7 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
             this.speedTester = new speed_tester_1.Pbkdf2SpeedTester();
             this.keySetup = null;
             this.mainGenerator = null;
+            this.lastComputeTime = null;
             this.setupScope();
         }
         setupScope() {
@@ -791,6 +797,7 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
                 .addEventListener('click', this.wrapErrorsAndBind(this.onCompute));
             document.querySelector('#clear-output')
                 .addEventListener('click', this.wrapErrorsAndBind(this.onClearOutput));
+            setInterval(this.onTick.bind(this), 1000);
         }
         wrapErrorsAndBind(fn) {
             const bound = fn.bind(this);
@@ -912,10 +919,11 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
         }
         async onClearOutput() {
             this.$scope.main.output = '';
+            this.$scope.main.clearMsg = '';
         }
         async onCompute() {
             this.$scope.main.busy = true;
-            this.$scope.main.output = '';
+            await this.onClearOutput();
             const generator = new PasswordGen.generators[this.$scope.main.passwordScheme]();
             const rounds = this.$scope.main.rounds;
             const stopProgressReport = this.reportProgress(rounds, s => this.$scope.main.progress = s);
@@ -938,10 +946,25 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
                     this.$scope.main.passwordStatus = 'Password cached in memory';
                 }
                 this.$scope.main.output = await this.mainGenerator.generatePassword(this.$scope.main.saltValue, rounds, generator);
+                this.lastComputeTime = new Date();
             }
             finally {
                 this.$scope.main.busy = false;
                 stopProgressReport();
+            }
+        }
+        onTick() {
+            if (this.lastComputeTime != null) {
+                const millisSinceCompute = new Date().getTime() - this.lastComputeTime.getTime();
+                const millisTillClear = AUTO_CLEAR_DELAY_MILLIS - millisSinceCompute;
+                if (millisTillClear < 0) {
+                    this.onClearOutput();
+                    this.lastComputeTime = null;
+                }
+                else {
+                    this.$scope.main.clearMsg =
+                        `in ${(millisTillClear / 1000).toFixed(1)} s`;
+                }
             }
         }
     }

@@ -6,6 +6,7 @@ import { KeySetup } from  './crypto/key_setup';
 import { MainGenerator } from './crypto/main_generator';
 
 const KEY_STORE_NAME = 'setup-key-store';
+const AUTO_CLEAR_DELAY_MILLIS = 60000;
 
 class DefaultScope {
   main = {
@@ -24,6 +25,7 @@ class DefaultScope {
     progress: '',
     output: '',
     passwordStatus: '',
+    clearMsg: '',
   };
   testing = {
     busy: false,
@@ -46,6 +48,7 @@ export class MainController {
   private readonly speedTester = new Pbkdf2SpeedTester();
   private keySetup: KeySetup | null = null;
   private mainGenerator: MainGenerator | null = null;
+  private lastComputeTime: Date | null = null;
 
   constructor() {
     this.setupScope();
@@ -90,6 +93,7 @@ export class MainController {
       .addEventListener('click', this.wrapErrorsAndBind(this.onCompute));
     document.querySelector('#clear-output')!
       .addEventListener('click', this.wrapErrorsAndBind(this.onClearOutput));
+    setInterval(this.onTick.bind(this), 1000);
   }
 
   private wrapErrorsAndBind(fn: () => Promise<any>) {
@@ -210,11 +214,12 @@ export class MainController {
 
   private async onClearOutput() {
     this.$scope.main.output = '';
+    this.$scope.main.clearMsg = '';
   }
 
   private async onCompute() {
     this.$scope.main.busy = true;
-    this.$scope.main.output = '';
+    await this.onClearOutput();
     const generator = new PasswordGen.generators[this.$scope.main.passwordScheme]!();
     const rounds = this.$scope.main.rounds;
     const stopProgressReport = this.reportProgress(rounds, s => this.$scope.main.progress = s);
@@ -236,9 +241,25 @@ export class MainController {
       }
       this.$scope.main.output = await this.mainGenerator.generatePassword(
         this.$scope.main.saltValue, rounds, generator);
+      this.lastComputeTime = new Date();
     } finally {
       this.$scope.main.busy = false;
       stopProgressReport();
+    }
+  }
+
+  private onTick() {
+    if (this.lastComputeTime != null) {
+      const millisSinceCompute =
+        new Date().getTime() - this.lastComputeTime.getTime();
+      const millisTillClear = AUTO_CLEAR_DELAY_MILLIS - millisSinceCompute;
+      if (millisTillClear < 0) {
+        this.onClearOutput();
+        this.lastComputeTime = null;
+      } else {
+        this.$scope.main.clearMsg =
+          `in ${(millisTillClear / 1000).toFixed(1)} s`;
+      }
     }
   }
 };

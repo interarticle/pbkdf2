@@ -85,6 +85,9 @@ Output:
 <span class="status-text" ow-bind-text="main.busy ? main.progress : ''"></span>
 <span id="output" class="fixed-width" ow-bind-text="main.output"></span>
 <button id="copy-output" ow-bind-prop="disabled=main.output === ''">Copy</button>
-<button id="clear-output" ow-bind-prop="disabled=main.output === ''">Clear</button>
+<button id="clear-output" ow-bind-prop="disabled=main.output === ''">
+  Clear
+  <span ow-bind-text="main.clearMsg"></span>
+</button>
 
 <script src="index.js"></script>
