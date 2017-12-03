@@ -827,6 +827,7 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
         async onClearOutput() {
             this.$scope.main.output = '';
             this.$scope.main.clearMsg = '';
+            this.lastComputeTime = null;
         }
         async onCompute() {
             this.$scope.main.busy = true;
@@ -866,11 +867,10 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
                 const millisTillClear = AUTO_CLEAR_DELAY_MILLIS - millisSinceCompute;
                 if (millisTillClear < 0) {
                     this.onClearOutput();
-                    this.lastComputeTime = null;
                 }
                 else {
                     this.$scope.main.clearMsg =
-                        `in ${(millisTillClear / 1000).toFixed(1)} s`;
+                        `in ${(millisTillClear / 1000).toFixed(0)} s`;
                 }
             }
         }

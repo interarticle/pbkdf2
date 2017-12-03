@@ -215,6 +215,7 @@ export class MainController {
   private async onClearOutput() {
     this.$scope.main.output = '';
     this.$scope.main.clearMsg = '';
+    this.lastComputeTime = null;
   }
 
   private async onCompute() {
@@ -255,10 +256,9 @@ export class MainController {
       const millisTillClear = AUTO_CLEAR_DELAY_MILLIS - millisSinceCompute;
       if (millisTillClear < 0) {
         this.onClearOutput();
-        this.lastComputeTime = null;
       } else {
         this.$scope.main.clearMsg =
-          `in ${(millisTillClear / 1000).toFixed(1)} s`;
+          `in ${(millisTillClear / 1000).toFixed(0)} s`;
       }
     }
   }
