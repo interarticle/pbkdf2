@@ -23,8 +23,6 @@
     ow-model="setup.keyHex">
 </label>
 
-HMAC-SHA512; ASCII enforced. 100000000 rounds.
-
 <span ow-bind-text="!setup.busy ? setup.status : ''" class="status-text"></span>
 <span ow-bind-text="setup.busy ? setup.progress : ''" class="status-text"></span>
 
