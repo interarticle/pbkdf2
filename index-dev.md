@@ -1,6 +1,9 @@
 ## PBKDF2
 
 <style>
+  h3 {
+    margin-bottom: 16px;
+  }
   input.lower-input-text {
     text-transform: lowercase;
   }
@@ -10,82 +13,166 @@
   .status-text {
     color: #999;
   }
+  .input-list {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 32px;
+  }
+  .input-list > * {
+    margin-bottom: 8px;
+    flex: 1;
+  }
+  .input-list > :last-child {
+    margin-bottom: 0;
+  }
+  .input-group {
+    display: flex;
+    flex-direction: column;
+  }
+  .input-group > .label, .bottom-panel {
+    color: #777;
+    font-size: 13px;
+  }
+  .input-group > .label {
+    margin-bottom: 2px;
+  }
+  .input-group > .bottom-panel {
+    margin-top: 2px;
+  }
+  .flex {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .flex > * {
+    margin-right: 4px;
+  }
+  .flex > :last-child {
+    margin-right: 0;
+  }
+  .flex > .fill {
+    flex: 1;
+  }
+  .output-box {
+    padding: 4px;
+    border-radius: 4px;
+    border: solid 1px #aaa;
+    background-color: #f5f5f5;
+    margin-bottom: 4px;
+    color: #000;
+  }
 </style>
 
 <button id="test-speed" ow-bind-prop="disabled=hashBusy">Retest PBKDF2 Speed</button>
 
 ### Setup Key
 
-<label>
-  Setup Key (hex no space):
-  <input type="text"
-    ow-bind-prop="placeholder=setup.keyStatus &#10; disabled=setupDisable"
-    ow-model="setup.keyHex">
-</label>
-
-<span ow-bind-text="!setup.busy ? setup.status : ''" class="status-text"></span>
-<span ow-bind-text="setup.busy ? setup.progress : ''" class="status-text"></span>
-
-<button id="destroy-setup-key" ow-bind-prop="disabled=hashBusy || (!setup.keyAvailable && !setup.storeError)">Destroy Key</button>
-<button id="set-setup-key" ow-bind-prop="disabled=hashBusy || setup.keyAvailable || setup.storeError">Set Key</button>
+<div class="input-list">
+  <label class="input-group">
+    <span class="label">Setup Key (hex no space)</span>
+    <input
+        type="text"
+        ow-bind-prop="placeholder=setup.keyStatus &#10; disabled=setupDisable"
+        ow-model="setup.keyHex">
+  </label>
+  <div>
+    <span
+        ow-bind-text="!setup.busy ? setup.status : ''"
+        class="status-text"></span>
+    <span
+        ow-bind-text="setup.busy ? setup.progress : ''"
+        class="status-text"></span>
+  </div>
+  <div>
+    <button
+        id="destroy-setup-key"
+        ow-bind-prop="disabled=hashBusy || (!setup.keyAvailable && !setup.storeError)">
+      Destroy Key
+    </button>
+    <button
+        id="set-setup-key"
+        ow-bind-prop="disabled=hashBusy || setup.keyAvailable || setup.storeError">
+      Set Key
+    </button>
+  </div>
+</div>
 
 ### Password Gen
 
-<label>
-  Password:
-  <input type="password"
-    ow-bind-prop="disabled=mainDisable &#10; placeholder=main.passwordStatus"
-    ow-model="main.password"/>
-</label>
+<div class="input-list">
+  <label class="input-group">
+    <span class="label">Password</span>
+    <input
+        type="password"
+        ow-bind-prop="disabled=mainDisable &#10; placeholder=main.passwordStatus"
+        ow-model="main.password">
+  </label>
 
-<p>
-  <div>
-    <label>
-      Salt:
-      <input type="text" class="lower-input-text fixed-width" ow-model="main.salt.siteUser" ow-bind-prop="disabled=mainDisable" />
+  <label class="input-group">
+    <span class="label">Salt</span>
+    <div class="flex">
+      <input
+          type="text"
+          class="lower-input-text fixed-width fill"
+          ow-model="main.salt.siteUser"
+          ow-bind-prop="disabled=mainDisable">
       <span class="fixed-width">/</span>
-      <input type="number" class="lower-input-text fixed-width" ow-model="main.salt.year" ow-bind-prop="disabled=mainDisable" style="width: 5em" />
+      <input
+          type="number"
+          class="lower-input-text fixed-width"
+          ow-model="main.salt.year"
+          ow-bind-prop="disabled=mainDisable" style="width: 5em">
       <span class="fixed-width">/</span>
-      <input type="number" class="lower-input-text fixed-width" ow-model="main.salt.revision" ow-bind-prop="disabled=mainDisable" min="0" style="width: 2em" />
-    </label>
-  </div>
-  <div>
-    <span class="status-text">
+      <input
+          type="number"
+          class="lower-input-text fixed-width"
+          ow-model="main.salt.revision"
+          ow-bind-prop="disabled=mainDisable"
+          min="0"
+          style="width: 2em">
+    </div>
+    <span class="status-text bottom-panel">
       Salt value:
       <span class="fixed-width">
-        "<span ow-bind-text="main.saltValue"></span>"
+        "<span ow-bind-text="main.saltValue">/2018/0</span>"
       </span>
     </span>
+  </label>
+  <label class="input-group">
+    <span class="label">Rounds</span>
+    <select ow-model="main.roundsText" ow-bind-prop="disabled=mainDisable">
+      <option value="5000000">5000000</option>
+    </select>
+  </label>
+  <label class="input-group">
+    <span class="label">Password Scheme</span>
+    <select ow-model="main.passwordScheme" ow-bind-prop="disabled=mainDisable">
+      <option value="CapitalNormalNum10">10 Char Alpha0</option>
+      <option value="Num4">4-digit number</option>
+      <option value="Num6">6-digit number</option>
+    </select>
+  </label>
+  <div>HMAC-SHA512; ASCII enforced.</div>
+  <div>
+    <button
+        id="compute"
+        ow-bind-prop="disabled=hashBusy || mainDisable">
+      Compute
+    </button>
   </div>
-</p>
-
-<label>
-  Rounds:
-  <select ow-model="main.roundsText" ow-bind-prop="disabled=mainDisable">
-    <option value="5000000">5000000</option>
-  </select>
-</label>
-
-<label>
-  Password Scheme:
-  <select ow-model="main.passwordScheme" ow-bind-prop="disabled=mainDisable">
-    <option value="CapitalNormalNum10">10 Char Alpha0</option>
-    <option value="Num4">4-digit number</option>
-    <option value="Num6">6-digit number</option>
-  </select>
-</label>
-
-HMAC-SHA512; ASCII enforced.
-
-<button id="compute" ow-bind-prop="disabled=hashBusy || mainDisable">Compute</button>
-
-Output:
-<span class="status-text" ow-bind-text="main.busy ? main.progress : ''"></span>
-<span id="output" class="fixed-width" ow-bind-text="main.output"></span>
-<button id="copy-output" ow-bind-prop="disabled=main.output === ''">Copy</button>
-<button id="clear-output" ow-bind-prop="disabled=main.output === ''">
-  Clear
-  <span ow-bind-text="main.clearMsg"></span>
-</button>
+  <div class="input-group">
+    <span class="label">Output</span>
+    <div id="output" class="fixed-width output-box">
+      <span class="status-text" ow-bind-text="main.busy ? main.progress : ''"></span>
+      <span ow-bind-text="main.output ? main.output : '\u00a0'"></span>
+    </div>
+    <div>
+      <button id="copy-output" ow-bind-prop="disabled=main.output === ''">Copy</button>
+      <button id="clear-output" ow-bind-prop="disabled=main.output === ''">
+        Clear
+        <span ow-bind-text="main.clearMsg"></span>
+      </button>
+    </div>
+  </div>
+</div>
 
 <script src="index.js"></script>
