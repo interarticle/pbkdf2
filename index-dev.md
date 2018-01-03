@@ -118,8 +118,7 @@
     <input
         type="password"
         ow-bind-prop="disabled=mainDisable &#10; placeholder=main.passwordStatus"
-        ow-model="main.password"
-        placeholder="Enter your master password">
+        ow-model="main.password">
   </label>
 
   <label class="input-group">
