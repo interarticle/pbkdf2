@@ -45,7 +45,7 @@
   }
   .flex > * {
     margin-right: 4px;
-    align-self: flex-end;
+    align-self: center;
   }
   .flex > :last-child {
     margin-right: 0;
@@ -118,7 +118,8 @@
     <input
         type="password"
         ow-bind-prop="disabled=mainDisable &#10; placeholder=main.passwordStatus"
-        ow-model="main.password">
+        ow-model="main.password"
+        label="Enter your master password">
   </label>
 
   <label class="input-group">
@@ -128,7 +129,8 @@
           type="text"
           class="lower-input-text fixed-width fill"
           ow-model="main.salt.siteUser"
-          ow-bind-prop="disabled=mainDisable">
+          ow-bind-prop="disabled=mainDisable"
+          label="Enter the site domain name">
       <span class="fixed-width">/</span>
       <input
           type="number"
