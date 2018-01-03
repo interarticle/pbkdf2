@@ -45,6 +45,7 @@
   }
   .flex > * {
     margin-right: 4px;
+    align-self: flex-end;
   }
   .flex > :last-child {
     margin-right: 0;
@@ -71,6 +72,7 @@
   }
   input[disabled] {
     padding: 4px;
+    background-color: #eee;
   }
 </style>
 
