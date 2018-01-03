@@ -161,9 +161,9 @@
   </div>
   <div class="input-group">
     <span class="label">Output</span>
-    <div id="output" class="fixed-width output-box">
+    <div class="fixed-width output-box">
       <span class="status-text" ow-bind-text="main.busy ? main.progress : ''"></span>
-      <span ow-bind-text="main.output ? main.output : '\u00a0'"></span>
+      <span id="output" ow-bind-text="main.output ? main.output : '\u00a0'"></span>
     </div>
     <div>
       <button id="copy-output" ow-bind-prop="disabled=main.output === ''">Copy</button>
