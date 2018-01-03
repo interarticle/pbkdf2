@@ -60,6 +60,9 @@
     margin-bottom: 4px;
     color: #000;
   }
+  .output-box > .status-text {
+    user-select: none;
+  }
 </style>
 
 <button id="test-speed" ow-bind-prop="disabled=hashBusy">Retest PBKDF2 Speed</button>
