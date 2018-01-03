@@ -193,7 +193,7 @@ define("object_watcher", ["require", "exports"], function (require, exports) {
             if (!bindExpr)
                 continue;
             const exprFn = makeScopeEvalFunction(bindExpr);
-            obj.$watch(s => exprFn.apply(s), v => elem.innerText = v);
+            obj.$watch(s => exprFn.apply(s), v => elem.textContent = v);
         }
         for (const elem of rootElement.querySelectorAll('*[ow-model]')) {
             if (elem.value === undefined)
