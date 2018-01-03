@@ -63,6 +63,15 @@
   .output-box > .status-text {
     user-select: none;
   }
+  input {
+    border: 0 none;
+    outline: none;
+    border-bottom: 1px solid #777;
+    padding: 4px 0;
+  }
+  input[disabled] {
+    padding: 4px;
+  }
 </style>
 
 <button id="test-speed" ow-bind-prop="disabled=hashBusy">Retest PBKDF2 Speed</button>
