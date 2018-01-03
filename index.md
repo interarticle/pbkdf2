@@ -60,6 +60,9 @@
     margin-bottom: 4px;
     color: #000;
   }
+  .output-box > .status-text {
+    user-select: none;
+  }
 </style>
 
 <button id="test-speed" ow-bind-prop="disabled=hashBusy">Retest PBKDF2 Speed</button>
@@ -161,9 +164,9 @@
   </div>
   <div class="input-group">
     <span class="label">Output</span>
-    <div id="output" class="fixed-width output-box">
+    <div class="fixed-width output-box">
       <span class="status-text" ow-bind-text="main.busy ? main.progress : ''"></span>
-      <span ow-bind-text="main.output ? main.output : '\u00a0'"></span>
+      <span id="output" ow-bind-text="main.output ? main.output : '\u00a0'"></span>
     </div>
     <div>
       <button id="copy-output" ow-bind-prop="disabled=main.output === ''">Copy</button>
@@ -371,7 +374,7 @@ define("object_watcher", ["require", "exports"], function (require, exports) {
             if (!bindExpr)
                 continue;
             const exprFn = makeScopeEvalFunction(bindExpr);
-            obj.$watch(s => exprFn.apply(s), v => elem.innerText = v);
+            obj.$watch(s => exprFn.apply(s), v => elem.textContent = v);
         }
         for (const elem of rootElement.querySelectorAll('*[ow-model]')) {
             if (elem.value === undefined)
