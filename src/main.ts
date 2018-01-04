@@ -217,6 +217,7 @@ export class MainController {
   private async onClearOutput() {
     this.$scope.main.output = '';
     this.$scope.main.clearMsg = '';
+    window.getSelection().removeAllRanges();
     this.lastComputeTime = null;
   }
 

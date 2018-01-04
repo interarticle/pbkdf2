@@ -828,6 +828,7 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
         async onClearOutput() {
             this.$scope.main.output = '';
             this.$scope.main.clearMsg = '';
+            window.getSelection().removeAllRanges();
             this.lastComputeTime = null;
         }
         async onCompute() {
