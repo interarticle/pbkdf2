@@ -4,9 +4,6 @@
   h3 {
     margin-bottom: 16px;
   }
-  input.lower-input-text {
-    text-transform: lowercase;
-  }
   .fixed-width {
     font-family: monospace;
   }
@@ -45,6 +42,7 @@
   }
   .flex > * {
     margin-right: 4px;
+    align-self: center;
   }
   .flex > :last-child {
     margin-right: 0;
@@ -62,6 +60,15 @@
   }
   .output-box > .status-text {
     user-select: none;
+  }
+  input {
+    border: 0 none;
+    outline: none;
+    border-bottom: 1px solid #777;
+    padding: 4px;
+  }
+  input[disabled] {
+    background-color: #eee;
   }
 </style>
 
@@ -115,19 +122,20 @@
     <div class="flex">
       <input
           type="text"
-          class="lower-input-text fixed-width fill"
+          class="fixed-width fill"
           ow-model="main.salt.siteUser"
-          ow-bind-prop="disabled=mainDisable">
+          ow-bind-prop="disabled=mainDisable"
+          placeholder="Enter the site domain name">
       <span class="fixed-width">/</span>
       <input
           type="number"
-          class="lower-input-text fixed-width"
+          class="fixed-width"
           ow-model="main.salt.year"
           ow-bind-prop="disabled=mainDisable" style="width: 5em">
       <span class="fixed-width">/</span>
       <input
           type="number"
-          class="lower-input-text fixed-width"
+          class="fixed-width"
           ow-model="main.salt.revision"
           ow-bind-prop="disabled=mainDisable"
           min="0"
@@ -806,6 +814,7 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
     Object.defineProperty(exports, "__esModule", { value: true });
     const KEY_STORE_NAME = 'setup-key-store';
     const AUTO_CLEAR_DELAY_MILLIS = 60000;
+    const ENTER_PASSWORD_PLACEHOLDER = 'Enter your master password';
     class DefaultScope {
         constructor() {
             this.main = {
@@ -822,7 +831,7 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
                 busy: false,
                 progress: '',
                 output: '',
-                passwordStatus: '',
+                passwordStatus: ENTER_PASSWORD_PLACEHOLDER,
                 clearMsg: '',
             };
             this.testing = {
@@ -967,7 +976,7 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
                     this.keySetup.close();
                     this.keySetup = null;
                     this.mainGenerator = null;
-                    this.$scope.main.passwordStatus = '';
+                    this.$scope.main.passwordStatus = ENTER_PASSWORD_PLACEHOLDER;
                 }
                 this.$scope.setup.progress = 'Deleting setup key';
                 const deleteTimeoutId = setTimeout(() => {
@@ -1008,6 +1017,7 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
         async onClearOutput() {
             this.$scope.main.output = '';
             this.$scope.main.clearMsg = '';
+            window.getSelection().removeAllRanges();
             this.lastComputeTime = null;
         }
         async onCompute() {
