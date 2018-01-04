@@ -4,9 +4,6 @@
   h3 {
     margin-bottom: 16px;
   }
-  input.lower-input-text {
-    text-transform: lowercase;
-  }
   .fixed-width {
     font-family: monospace;
   }
@@ -68,10 +65,9 @@
     border: 0 none;
     outline: none;
     border-bottom: 1px solid #777;
-    padding: 4px 0;
+    padding: 4px;
   }
   input[disabled] {
-    padding: 4px;
     background-color: #eee;
   }
 </style>
@@ -126,20 +122,20 @@
     <div class="flex">
       <input
           type="text"
-          class="lower-input-text fixed-width fill"
+          class="fixed-width fill"
           ow-model="main.salt.siteUser"
           ow-bind-prop="disabled=mainDisable"
           placeholder="Enter the site domain name">
       <span class="fixed-width">/</span>
       <input
           type="number"
-          class="lower-input-text fixed-width"
+          class="fixed-width"
           ow-model="main.salt.year"
           ow-bind-prop="disabled=mainDisable" style="width: 5em">
       <span class="fixed-width">/</span>
       <input
           type="number"
-          class="lower-input-text fixed-width"
+          class="fixed-width"
           ow-model="main.salt.revision"
           ow-bind-prop="disabled=mainDisable"
           min="0"

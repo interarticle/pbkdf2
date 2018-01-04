@@ -625,6 +625,7 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
     Object.defineProperty(exports, "__esModule", { value: true });
     const KEY_STORE_NAME = 'setup-key-store';
     const AUTO_CLEAR_DELAY_MILLIS = 60000;
+    const ENTER_PASSWORD_PLACEHOLDER = 'Enter your master password';
     class DefaultScope {
         constructor() {
             this.main = {
@@ -641,7 +642,7 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
                 busy: false,
                 progress: '',
                 output: '',
-                passwordStatus: '',
+                passwordStatus: ENTER_PASSWORD_PLACEHOLDER,
                 clearMsg: '',
             };
             this.testing = {
@@ -786,7 +787,7 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
                     this.keySetup.close();
                     this.keySetup = null;
                     this.mainGenerator = null;
-                    this.$scope.main.passwordStatus = '';
+                    this.$scope.main.passwordStatus = ENTER_PASSWORD_PLACEHOLDER;
                 }
                 this.$scope.setup.progress = 'Deleting setup key';
                 const deleteTimeoutId = setTimeout(() => {
