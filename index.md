@@ -113,7 +113,7 @@
     <span class="label">Password</span>
     <input
         type="password"
-        ow-bind-prop="disabled=!setup.keyAvailable &#10; placeholder=main.passwordStatus"
+        ow-bind-prop="placeholder=main.passwordStatus"
         ow-model="main.password">
   </label>
 
@@ -124,20 +124,18 @@
           type="text"
           class="fixed-width fill"
           ow-model="main.salt.siteUser"
-          ow-bind-prop="disabled=!setup.keyAvailable"
           placeholder="Enter the site domain name">
       <span class="fixed-width">/</span>
       <input
           type="number"
           class="fixed-width"
           ow-model="main.salt.year"
-          ow-bind-prop="disabled=!setup.keyAvailable" style="width: 5em">
+          style="width: 5em">
       <span class="fixed-width">/</span>
       <input
           type="number"
           class="fixed-width"
           ow-model="main.salt.revision"
-          ow-bind-prop="disabled=!setup.keyAvailable"
           min="0"
           style="width: 2em">
     </div>
@@ -150,13 +148,13 @@
   </label>
   <label class="input-group">
     <span class="label">Rounds</span>
-    <select ow-model="main.roundsText" ow-bind-prop="disabled=!setup.keyAvailable">
+    <select ow-model="main.roundsText">
       <option value="5000000">5000000</option>
     </select>
   </label>
   <label class="input-group">
     <span class="label">Password Scheme</span>
-    <select ow-model="main.passwordScheme" ow-bind-prop="disabled=!setup.keyAvailable">
+    <select ow-model="main.passwordScheme">
       <option value="CapitalNormalNum10">10 Char Alpha0</option>
       <option value="Num4">4-digit number</option>
       <option value="Num6">6-digit number</option>
