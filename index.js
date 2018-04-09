@@ -484,6 +484,27 @@ define("password/generator", ["require", "exports", "password/complexity"], func
                 }
             }
         },
+        CapitalNormal2Num10: class extends AbstractPasswordGenerator {
+            constructor() {
+                super(...arguments);
+                this.complexityRules = [
+                    new Complexity.RuleNoSequentialCI(3),
+                    new Complexity.RuleNoRepeatingCI(3),
+                ];
+                this.numChars = 10;
+            }
+            getCharSet(index) {
+                if (index == 0) {
+                    return exports.charSets.upperAlpha;
+                }
+                else if (index < 8) {
+                    return exports.charSets.lowerAlpha;
+                }
+                else {
+                    return exports.charSets.numbers;
+                }
+            }
+        },
         Num4: class extends AbstractPasswordGenerator {
             constructor() {
                 super(...arguments);

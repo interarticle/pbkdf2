@@ -62,6 +62,22 @@ export const generators: { [name: string]: (new () => PasswordGenerator) | undef
       }
     }
   },
+  CapitalNormal2Num10: class extends AbstractPasswordGenerator {
+    readonly complexityRules = [
+      new Complexity.RuleNoSequentialCI(3),
+      new Complexity.RuleNoRepeatingCI(3),
+    ];
+    readonly numChars = 10;
+    getCharSet(index: number) {
+      if (index == 0) {
+        return charSets.upperAlpha;
+      } else if (index < 8) {
+        return charSets.lowerAlpha;
+      } else {
+        return charSets.numbers;
+      }
+    }
+  },
   Num4: class extends AbstractPasswordGenerator {
     readonly complexityRules = [
       new Complexity.RuleNoRepeatingCI(2),

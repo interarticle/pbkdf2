@@ -156,6 +156,7 @@
     <span class="label">Password Scheme</span>
     <select ow-model="main.passwordScheme">
       <option value="CapitalNormalNum10">10 Char Alpha0</option>
+      <option value="CapitalNormal2Num10">10 Char Alpha00</option>
       <option value="Num4">4-digit number</option>
       <option value="Num6">6-digit number</option>
     </select>

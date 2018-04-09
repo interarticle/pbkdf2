@@ -23,9 +23,10 @@ const (
 var (
 	setupSalt       = flag.String("setup_salt", "PBKDF-PASSWORD-1", "Setup key generation PBKDF2 salt")
 	passwordGenType = map[string]func([]byte) string{
-		"Alphanum10": passwordgen.GenAlphanum10,
-		"Num4":       passwordgen.GenNum4,
-		"Num6":       passwordgen.GenNum6,
+		"AlphaNum10":  passwordgen.GenAlphaNum10,
+		"Alpha2Num10": passwordgen.GenAlpha2Num10,
+		"Num4":        passwordgen.GenNum4,
+		"Num6":        passwordgen.GenNum6,
 	}
 )
 

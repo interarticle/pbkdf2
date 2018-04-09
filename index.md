@@ -156,6 +156,7 @@
     <span class="label">Password Scheme</span>
     <select ow-model="main.passwordScheme">
       <option value="CapitalNormalNum10">10 Char Alpha0</option>
+      <option value="CapitalNormal2Num10">10 Char Alpha00</option>
       <option value="Num4">4-digit number</option>
       <option value="Num6">6-digit number</option>
     </select>
@@ -664,6 +665,27 @@ define("password/generator", ["require", "exports", "password/complexity"], func
                     return exports.charSets.upperAlpha;
                 }
                 else if (index < 9) {
+                    return exports.charSets.lowerAlpha;
+                }
+                else {
+                    return exports.charSets.numbers;
+                }
+            }
+        },
+        CapitalNormal2Num10: class extends AbstractPasswordGenerator {
+            constructor() {
+                super(...arguments);
+                this.complexityRules = [
+                    new Complexity.RuleNoSequentialCI(3),
+                    new Complexity.RuleNoRepeatingCI(3),
+                ];
+                this.numChars = 10;
+            }
+            getCharSet(index) {
+                if (index == 0) {
+                    return exports.charSets.upperAlpha;
+                }
+                else if (index < 8) {
                     return exports.charSets.lowerAlpha;
                 }
                 else {

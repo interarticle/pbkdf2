@@ -23,10 +23,19 @@ func generatePassword(charSets [][]rune, rules []ruleFunction, derivedBytes []by
 	return string(genChars)
 }
 
-func GenAlphanum10(derivedBytes []byte) string {
+func GenAlphaNum10(derivedBytes []byte) string {
 	return generatePassword([][]rune{
 		upperCase, lowerCase, lowerCase, lowerCase, lowerCase, lowerCase,
 		lowerCase, lowerCase, lowerCase, numbers,
+	}, []ruleFunction{
+		excludeRepeats(3), excludeSequential(3),
+	}, derivedBytes)
+}
+
+func GenAlpha2Num10(derivedBytes []byte) string {
+	return generatePassword([][]rune{
+		upperCase, lowerCase, lowerCase, lowerCase, lowerCase, lowerCase,
+		lowerCase, lowerCase, numbers, numbers,
 	}, []ruleFunction{
 		excludeRepeats(3), excludeSequential(3),
 	}, derivedBytes)
