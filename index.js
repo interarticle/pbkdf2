@@ -463,6 +463,30 @@ define("password/generator", ["require", "exports", "password/complexity"], func
     }
     exports.AbstractPasswordGenerator = AbstractPasswordGenerator;
     exports.generators = {
+        CapitalNormal2NumDot11: class extends AbstractPasswordGenerator {
+            constructor() {
+                super(...arguments);
+                this.complexityRules = [
+                    new Complexity.RuleNoSequentialCI(3),
+                    new Complexity.RuleNoRepeatingCI(3),
+                ];
+                this.numChars = 11;
+            }
+            getCharSet(index) {
+                if (index == 0) {
+                    return exports.charSets.upperAlpha;
+                }
+                else if (index < 8) {
+                    return exports.charSets.lowerAlpha;
+                }
+                else if (index < 10) {
+                    return exports.charSets.numbers;
+                }
+                else {
+                    return ['.'];
+                }
+            }
+        },
         CapitalNormalNum10: class extends AbstractPasswordGenerator {
             constructor() {
                 super(...arguments);
@@ -659,7 +683,7 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
                 saltValue: '',
                 roundsText: '5000000',
                 rounds: 5000000,
-                passwordScheme: 'CapitalNormalNum10',
+                passwordScheme: 'CapitalNormal2NumDot11',
                 busy: false,
                 progress: '',
                 output: '',

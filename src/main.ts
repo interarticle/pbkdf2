@@ -21,7 +21,7 @@ class DefaultScope {
     saltValue: '',
     roundsText: '5000000',
     rounds: 5000000,
-    passwordScheme: 'CapitalNormalNum10',
+    passwordScheme: 'CapitalNormal2NumDot11',
 
     busy: false,
     progress: '',
