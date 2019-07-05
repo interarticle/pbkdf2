@@ -1,4 +1,4 @@
-## PBKDF2
+<h2>PBKDF2</h2>
 
 <style>
   h3 {
@@ -74,7 +74,7 @@
 
 <button id="test-speed" ow-bind-prop="disabled=hashBusy">Retest PBKDF2 Speed</button>
 
-### Setup Key
+<h3>Setup Key</h3>
 
 <div class="input-list">
   <label class="input-group">
@@ -106,7 +106,7 @@
   </div>
 </div>
 
-### Password Gen
+<h3>Password Gen</h3>
 
 <div class="input-list">
   <label class="input-group">
@@ -137,7 +137,7 @@
           class="fixed-width"
           ow-model="main.salt.revision"
           min="0"
-          style="width: 2em">
+          style="width: 3em">
     </div>
     <span class="status-text bottom-panel">
       Salt value:
@@ -156,8 +156,8 @@
     <span class="label">Password Scheme</span>
     <select ow-model="main.passwordScheme">
       <option value="CapitalNormal2NumDot11">11 Char Alpha00.</option>
-      <option value="CapitalNormalNum10">10 Char Alpha0</option>
-      <option value="CapitalNormal2Num10">10 Char Alpha00</option>
+      <option value="CapitalNormalNum10" ow-bind-prop="disabled=main.salt.year &gt;= '2020'">10 Char Alpha0</option>
+      <option value="CapitalNormal2Num10" ow-bind-prop="disabled=main.salt.year &gt;= '2020'">10 Char Alpha00</option>
       <option value="Num4">4-digit number</option>
       <option value="Num6">6-digit number</option>
     </select>
