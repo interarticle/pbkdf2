@@ -21,13 +21,15 @@ class DefaultScope {
     saltValue: '',
     roundsText: '5000000',
     rounds: 5000000,
-    passwordScheme: 'CapitalNormal2NumDot11',
+    passwordScheme: '',
 
     busy: false,
     progress: '',
     output: '',
     passwordStatus: ENTER_PASSWORD_PLACEHOLDER,
     clearMsg: '',
+    autoScheme: false,
+    manualScheme: false,
   };
   testing = {
     busy: false,
@@ -74,6 +76,22 @@ export class MainController {
     this.$scope.$watch(
       s => `${s.main.salt.siteUser}/${s.main.salt.year}/${s.main.salt.revision}`,
       (v, s) => s.main.saltValue = v);
+    this.setupAutoScheme();
+  }
+
+  private setupAutoScheme(): void {
+    // Auto compute scheme based on year.
+    this.$scope.$watch(s => s.main.salt.year, (year, s) => {
+      if (!s.main.manualScheme) {
+        if (year < '2019') {
+          s.main.passwordScheme = 'CapitalNormalNum10';
+        } else {
+          s.main.passwordScheme = 'CapitalNormal2NumDot11';
+        }
+        s.main.autoScheme = true;
+      }
+    });
+    this.$scope.main.autoScheme = false;
   }
 
   bootstrap() {
@@ -95,6 +113,8 @@ export class MainController {
       .addEventListener('click', this.wrapErrorsAndBind(this.onCompute));
     document.querySelector('#clear-output')!
       .addEventListener('click', this.wrapErrorsAndBind(this.onClearOutput));
+    document.querySelector('#select-password-scheme')!
+      .addEventListener('click', this.wrapErrorsAndBind(this.onSelectScheme));
     setInterval(this.onTick.bind(this), 1000);
   }
 
@@ -223,32 +243,35 @@ export class MainController {
 
   private async onCompute() {
     this.$scope.main.busy = true;
-    await this.onClearOutput();
-    const generator = new PasswordGen.generators[this.$scope.main.passwordScheme]!();
-    const rounds = this.$scope.main.rounds;
-    const stopProgressReport = this.reportProgress(rounds, s => this.$scope.main.progress = s);
     try {
-      if (this.mainGenerator == null) {
-        if (!this.keySetup) throw new Error('assertion error: keySetup not initialized');
-        const storedKeys = await this.keySetup.getStoredKeys();
-        if (!storedKeys) throw new Error('assertion error: keySetup keys not available');
-        const [pbkdfKey, saltKey] = storedKeys
-        this.mainGenerator = new MainGenerator(pbkdfKey, saltKey);
-      }
-      if (!this.mainGenerator.hasMasterKey || this.$scope.main.password != '') {
-        if (this.$scope.main.password === '') {
-          throw new Error('password gen password must be specified the first time');
+    await this.onClearOutput();
+      const generator = new PasswordGen.generators[this.$scope.main.passwordScheme]!();
+      const rounds = this.$scope.main.rounds;
+      const stopProgressReport = this.reportProgress(rounds, s => this.$scope.main.progress = s);
+      try {
+        if (this.mainGenerator == null) {
+          if (!this.keySetup) throw new Error('assertion error: keySetup not initialized');
+          const storedKeys = await this.keySetup.getStoredKeys();
+          if (!storedKeys) throw new Error('assertion error: keySetup keys not available');
+          const [pbkdfKey, saltKey] = storedKeys
+          this.mainGenerator = new MainGenerator(pbkdfKey, saltKey);
         }
-        await this.mainGenerator.updateMasterPassword(this.$scope.main.password);
-        this.$scope.main.password = '';
-        this.$scope.main.passwordStatus = 'Password cached in memory';
+        if (!this.mainGenerator.hasMasterKey || this.$scope.main.password != '') {
+          if (this.$scope.main.password === '') {
+            throw new Error('password gen password must be specified the first time');
+          }
+          await this.mainGenerator.updateMasterPassword(this.$scope.main.password);
+          this.$scope.main.password = '';
+          this.$scope.main.passwordStatus = 'Password cached in memory';
+        }
+        this.$scope.main.output = await this.mainGenerator.generatePassword(
+          this.$scope.main.saltValue, rounds, generator);
+        this.lastComputeTime = new Date();
+      } finally {
+        stopProgressReport();
       }
-      this.$scope.main.output = await this.mainGenerator.generatePassword(
-        this.$scope.main.saltValue, rounds, generator);
-      this.lastComputeTime = new Date();
     } finally {
       this.$scope.main.busy = false;
-      stopProgressReport();
     }
   }
 
@@ -264,5 +287,10 @@ export class MainController {
           `in ${(millisTillClear / 1000).toFixed(0)} s`;
       }
     }
+  }
+
+  private async onSelectScheme(): Promise<void> {
+    this.$scope.main.manualScheme = true;
+    this.$scope.main.autoScheme = false;
   }
 };
