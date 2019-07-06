@@ -5,6 +5,19 @@ import * as PasswordGen from './password/generator';
 import { KeySetup } from  './crypto/key_setup';
 import { MainGenerator } from './crypto/main_generator';
 
+/** Idiotic websites that have crazy password requirements.
+ *
+ * <p>Note: being excluded from this list does not mean that the site is not
+ * idiotic. But these are particularly nasty.
+ *
+ * Only applicable to new websites calculated after salt year 2019.
+ */
+const IDIOTIC_WEBSITE_OVERRIDES: {[site: string]: string} = {
+  // Alpha num plus underscore only. Whatever they're using for the password
+  // salt, I cannot fathom.
+  '12306.cn': 'CapitalNormal2Num10',
+};
+
 const KEY_STORE_NAME = 'setup-key-store';
 const AUTO_CLEAR_DELAY_MILLIS = 60000;
 
@@ -81,17 +94,24 @@ export class MainController {
 
   private setupAutoScheme(): void {
     // Auto compute scheme based on year.
-    this.$scope.$watch(s => s.main.salt.year, (year, s) => {
-      if (!s.main.manualScheme) {
-        if (year < '2019') {
-          s.main.passwordScheme = 'CapitalNormalNum10';
-        } else {
-          s.main.passwordScheme = 'CapitalNormal2NumDollar11';
+    this.$scope.$watch(
+      s => [s.main.salt.year, s.main.salt.siteUser],
+      ([year, siteUser], s) => {
+        if (!s.main.manualScheme) {
+          if (year < '2019') {
+            s.main.passwordScheme = 'CapitalNormalNum10';
+          } else {
+            s.main.passwordScheme = 'CapitalNormal2NumDollar11';
+            // Only override for 2019 or later.
+            const site = /^(.*@|)(.*)$/.exec(siteUser)![2];
+            const override: string|undefined = IDIOTIC_WEBSITE_OVERRIDES[site];
+            if (override != null) {
+              s.main.passwordScheme = override;
+            }
+          }
+          s.main.autoScheme = true;
         }
-        s.main.autoScheme = true;
-      }
-    });
-    this.$scope.main.autoScheme = false;
+      });
   }
 
   bootstrap() {

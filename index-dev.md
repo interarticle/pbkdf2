@@ -155,8 +155,8 @@
   <label class="input-group">
     <span class="label">
       Password Scheme
-      <span ow-bind-text="main.manualScheme ? '(manual)' : ''"></span>
-      <span ow-bind-text="main.autoScheme ? '(auto updated)' : ''" style="color: red;"></span>
+      <span ow-bind-text="main.manualScheme ? '(manual)' : ''" style="color: red;"></span>
+      <span ow-bind-text="main.autoScheme ? '(auto selected)' : ''" style="color: green;"></span>
     </span>
     <select id="select-password-scheme" ow-model="main.passwordScheme">
       <option value="CapitalNormal2NumDollar11">11 Char Alpha00$</option>

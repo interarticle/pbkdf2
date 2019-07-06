@@ -155,8 +155,8 @@
   <label class="input-group">
     <span class="label">
       Password Scheme
-      <span ow-bind-text="main.manualScheme ? '(manual)' : ''"></span>
-      <span ow-bind-text="main.autoScheme ? '(auto updated)' : ''" style="color: red;"></span>
+      <span ow-bind-text="main.manualScheme ? '(manual)' : ''" style="color: red;"></span>
+      <span ow-bind-text="main.autoScheme ? '(auto selected)' : ''" style="color: green;"></span>
     </span>
     <select id="select-password-scheme" ow-model="main.passwordScheme">
       <option value="CapitalNormal2NumDollar11">11 Char Alpha00$</option>
@@ -861,6 +861,18 @@ define("crypto/main_generator", ["require", "exports", "binutil"], function (req
 define("main", ["require", "exports", "object_watcher", "indexed_db_object_map", "crypto/speed_tester", "password/generator", "crypto/key_setup", "crypto/main_generator"], function (require, exports, ObjectWatcher, IndexedDBObjectMap, speed_tester_1, PasswordGen, key_setup_1, main_generator_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    /** Idiotic websites that have crazy password requirements.
+     *
+     * <p>Note: being excluded from this list does not mean that the site is not
+     * idiotic. But these are particularly nasty.
+     *
+     * Only applicable to new websites calculated after salt year 2019.
+     */
+    const IDIOTIC_WEBSITE_OVERRIDES = {
+        // Alpha num plus underscore only. Whatever they're using for the password
+        // salt, I cannot fathom.
+        '12306.cn': 'CapitalNormal2Num10',
+    };
     const KEY_STORE_NAME = 'setup-key-store';
     const AUTO_CLEAR_DELAY_MILLIS = 60000;
     const ENTER_PASSWORD_PLACEHOLDER = 'Enter your master password';
@@ -930,18 +942,23 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
         }
         setupAutoScheme() {
             // Auto compute scheme based on year.
-            this.$scope.$watch(s => s.main.salt.year, (year, s) => {
+            this.$scope.$watch(s => [s.main.salt.year, s.main.salt.siteUser], ([year, siteUser], s) => {
                 if (!s.main.manualScheme) {
                     if (year < '2019') {
                         s.main.passwordScheme = 'CapitalNormalNum10';
                     }
                     else {
                         s.main.passwordScheme = 'CapitalNormal2NumDollar11';
+                        // Only override for 2019 or later.
+                        const site = /^(.*@|)(.*)$/.exec(siteUser)[2];
+                        const override = IDIOTIC_WEBSITE_OVERRIDES[site];
+                        if (override != null) {
+                            s.main.passwordScheme = override;
+                        }
                     }
                     s.main.autoScheme = true;
                 }
             });
-            this.$scope.main.autoScheme = false;
         }
         bootstrap() {
             this.bindElements();
