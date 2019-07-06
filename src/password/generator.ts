@@ -46,7 +46,7 @@ export abstract class AbstractPasswordGenerator implements PasswordGenerator {
 }
 
 export const generators: { [name: string]: (new () => PasswordGenerator) | undefined } = {
-  CapitalNormal2NumDot11: class extends AbstractPasswordGenerator {
+  CapitalNormal2NumDollar11: class extends AbstractPasswordGenerator {
     readonly complexityRules = [
       new Complexity.RuleNoSequentialCI(3),
       new Complexity.RuleNoRepeatingCI(3),
@@ -60,7 +60,7 @@ export const generators: { [name: string]: (new () => PasswordGenerator) | undef
       } else if (index < 10) {
         return charSets.numbers;
       } else {
-        return ['.'];
+        return ['$'];
       }
     }
   },

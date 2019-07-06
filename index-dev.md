@@ -159,7 +159,7 @@
       <span ow-bind-text="main.autoScheme ? '(auto updated)' : ''" style="color: red;"></span>
     </span>
     <select id="select-password-scheme" ow-model="main.passwordScheme">
-      <option value="CapitalNormal2NumDot11">11 Char Alpha00.</option>
+      <option value="CapitalNormal2NumDollar11">11 Char Alpha00$</option>
       <option value="CapitalNormalNum10" ow-bind-prop="disabled=main.salt.year &gt;= '2020'">10 Char Alpha0</option>
       <option value="CapitalNormal2Num10" ow-bind-prop="disabled=main.salt.year &gt;= '2020'">10 Char Alpha00</option>
       <option value="Num4">4-digit number</option>

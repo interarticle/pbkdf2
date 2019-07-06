@@ -86,7 +86,7 @@ export class MainController {
         if (year < '2019') {
           s.main.passwordScheme = 'CapitalNormalNum10';
         } else {
-          s.main.passwordScheme = 'CapitalNormal2NumDot11';
+          s.main.passwordScheme = 'CapitalNormal2NumDollar11';
         }
         s.main.autoScheme = true;
       }

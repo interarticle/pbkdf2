@@ -463,7 +463,7 @@ define("password/generator", ["require", "exports", "password/complexity"], func
     }
     exports.AbstractPasswordGenerator = AbstractPasswordGenerator;
     exports.generators = {
-        CapitalNormal2NumDot11: class extends AbstractPasswordGenerator {
+        CapitalNormal2NumDollar11: class extends AbstractPasswordGenerator {
             constructor() {
                 super(...arguments);
                 this.complexityRules = [
@@ -483,7 +483,7 @@ define("password/generator", ["require", "exports", "password/complexity"], func
                     return exports.charSets.numbers;
                 }
                 else {
-                    return ['.'];
+                    return ['$'];
                 }
             }
         },
@@ -743,7 +743,7 @@ define("main", ["require", "exports", "object_watcher", "indexed_db_object_map",
                         s.main.passwordScheme = 'CapitalNormalNum10';
                     }
                     else {
-                        s.main.passwordScheme = 'CapitalNormal2NumDot11';
+                        s.main.passwordScheme = 'CapitalNormal2NumDollar11';
                     }
                     s.main.autoScheme = true;
                 }
